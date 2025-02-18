@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сайт Kaspersky</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0d6efd, #6610f2);
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .section h1 {
+            color: #fff;
+        }
+
+        form {
+            margin-top: 10px;
+        }
+
+        input {
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .feedback-form {
+            margin-bottom: 30px;
+        }
+
+        .feedback-form input, .feedback-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .feedback-form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .feedback-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .reviews {
+            margin-top: 30px;
+        }
+
+        .review-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .review-item h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #007bff;
+        }
+
+        .review-item p {
+            margin-top: 10px;
+            color: #555;
+        }
+
+        /* Стили для звездочек */
+        .stars {
+            color: gold;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="section" id="register">
+        <h1>Регистрация</h1>
+        <form method="post">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" required><br>
+
+            <label for="password">Пароль:</label>
+            <input type="password" name="password" id="password" required><br>
+
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        <p><a href="#login" style="color: #fff;">Уже есть аккаунт? Войти</a></p>
+    </div>
+
+    <div class="section" id="login">
+        <h1>Вход</h1>
+        <form method="post">
+            <label for="emailLogin">Email:</label>
+            <input type="email" name="email" id="emailLogin" required><br>
+
+            <label for="passwordLogin">Пароль:</label>
+            <input type="password" name="password" id="passwordLogin" required><br>
+
+            <button type="submit" onclick="openFile(event)">Войти</button>
+        </form>
+        <p><a href="#register" style="color: #fff;">Нет аккаунта? Зарегистрироваться</a></p>
+    </div>
+
+    <!-- Форма для добавления отзыва -->
+    <div class="feedback-form">
+        <input type="text" id="name" placeholder="Ваше имя" required>
+        <textarea id="reviewText" rows="5" placeholder="Оставьте ваш отзыв" required></textarea><br>
+
+        <!-- Селектор для звездочек -->
+        <label for="rating">Оценка:</label><br>
+        <select id="rating">
+            <option value="1">★</option>
+            <option value="2">★★</option>
+            <option value="3">★★★</option>
+            <option value="4">★★★★</option>
+            <option value="5">★★★★★</option>
+        </select><br>
+
+        <button onclick="submitReview()">Отправить отзыв</button>
+    </div>
+
+    <div class="reviews" id="reviewsList">
+    </div>
+</div>
+
+<script>
+    // Загружаем сохраненные отзывы из Local Storage
+    function loadReviews() {
+        const savedReviews = localStorage.getItem('reviews');
+        if (savedReviews) {
+            return JSON.parse(savedReviews);
+        }
+        return [];
+    }
+
+    // Массив для хранения отзывов
+    let reviews = loadReviews();
+
+    // Функция для добавления отзыва
+    function submitReview() {
+        const name = document.getElementById('name').value;
+        const reviewText = document.getElementById('reviewText').value;
+        const rating = document.getElementById('rating').value;
+
+        if (name && reviewText && rating) {
+            // Добавляем новый отзыв в массив
+            reviews.push({ name, reviewText, rating });
+
+            // Сохраняем отзывы в Local Storage
+            localStorage.setItem('reviews', JSON.stringify(reviews));
+
+            // Обновляем отображение отзывов
+            displayReviews();
+
+            // Очищаем поля формы
+            document.getElementById('name').value = '';
+            document.getElementById('reviewText').value = '';
+            document.getElementById('rating').value = '1';
+        } else {
+            alert('Пожалуйста, заполните все поля!');
+        }
+    }
+
+    // Функция для отображения отзывов
+    function displayReviews() {
+        const reviewsList = document.getElementById('reviewsList');
+        reviewsList.innerHTML = ''; // Очищаем текущие отзывы
+
+        // Отображаем все отзывы из массива
+        reviews.forEach((review, index) => {
+            const reviewItem = document.createElement('div');
+            reviewItem.classList.add('review-item');
+            reviewItem.innerHTML = `
+                <h3>${review.name}</h3>
+                <p>${review.reviewText}</p>
+                <div class="stars">${'★'.repeat(review.rating)}</div>
+            `;
+            reviewsList.appendChild(reviewItem);
+        });
+    }
+
+    // Отображаем отзывы при загрузке страницы
+    displayReviews();
+
+    // Функция для открытия локального файла по нажатию кнопки "Войти"
+    function openFile(event) {
+        event.preventDefault();
+        window.location.href = 'file:///C:/Users/фвьшт/Downloads/Kasperov.html';
+    }
+</script>
+
+</body>
+</html>
