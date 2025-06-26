@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Доступ к сайту</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #2575fc;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1b5fd9;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Введите ваш возраст</h1>
+        <input type="number" id="age" placeholder="Год рождения">
+        <button onclick="checkAge()">Продолжить</button>
+        <div id="ageError" class="error"></div>
+
+        <div id="passwordSection" style="display:none;">
+            <h1>Создайте пароль</h1>
+            <input type="password" id="password" placeholder="Пароль">
+            <input type="password" id="confirmPassword" placeholder="Подтвердите пароль">
+            <button onclick="checkPassword()">Подтвердить</button>
+            <div id="passwordError" class="error"></div>
+        </div>
+
+        <div id="captchaSection" style="display:none;">
+            <h1>Введите капчу</h1>
+            <p id="captcha"></p>
+            <input type="text" id="captchaInput" placeholder="Введите капчу">
+            <button onclick="checkCaptcha()">Проверить</button>
+            <div id="captchaError" class="error"></div>
+        </div>
+
+        <div id="success" style="display:none;">
+            <h1>Доступ разрешен!</h1>
+        </div>
+    </div>
+
+    <script>
+        function checkAge() {
+            const age = document.getElementById('age').value;
+            if (age >= 2010) {
+                document.getElementById('ageError').innerText = "Доступ запрещен. Вы слишком молоды.";
+            } else {
+                document.getElementById('ageError').innerText = "";
+                document.getElementById('passwordSection').style.display = 'block';
+            }
+        }
+
+        function checkPassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (password !== confirmPassword) {
+                document.getElementById('passwordError').innerText = "Пароли не совпадают.";
+            } else {
+                document.getElementById('passwordError').innerText = "";
+                document.getElementById('captchaSection').style.display = 'block';
+                generateCaptcha();
+            }
+        }
+
+        function generateCaptcha() {
+            const captcha = Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('captcha').innerText = captcha;
+        }
+
+        function checkCaptcha() {
+            const captcha = document.getElementById('captcha').innerText;
+            const captchaInput = document.getElementById('captchaInput').value;
+            if (captcha !== captchaInput) {
+                document.getElementById('captchaError').innerText = "Неверная капча.";
+            } else {
+                document.getElementById('captchaError').innerText = "";
+                document.getElementById('captchaSection').style.display = 'none';
+                document.getElementById('success').style.display = 'block';
+
+                // Перенаправление на другую страницу через 2 секунды
+                setTimeout(() => {
+                    window.location.href = "https://darumenchik.github.io/kasperov228/Profile.html"; // Замените на нужную ссылку
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>

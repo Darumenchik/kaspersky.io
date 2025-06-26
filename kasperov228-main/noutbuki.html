@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ноутбуки</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #444;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .laptops {
+            display: none;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .laptops.show {
+            display: block;
+            opacity: 1;
+        }
+        .laptop {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .laptop:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .laptop h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #007bff;
+        }
+        .laptop p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Список ноутбуков</h1>
+    <button onclick="showLaptops()">Показать ноутбуки</button>
+
+    <div class="laptops" id="laptops">
+        <div class="laptop fade-in">
+            <h3>Ноутбук 1: Dell Inspiron</h3>
+            <p>Цена: 250 000 ₸</p>
+            <p>Процессор: Intel Core i5</p>
+            <p>Оперативная память: 8 ГБ</p>
+            <p>Жесткий диск: 512 ГБ SSD</p>
+            <p>Экран: 15.6 дюймов</p>
+        </div>
+        <div class="laptop fade-in">
+            <h3>Ноутбук 2: HP Pavilion</h3>
+            <p>Цена: 225 000 ₸</p>
+            <p>Процессор: AMD Ryzen 5</p>
+            <p>Оперативная память: 8 ГБ</p>
+            <p>Жесткий диск: 256 ГБ SSD</p>
+            <p>Экран: 14 дюймов</p>
+        </div>
+        <div class="laptop fade-in">
+            <h3>Ноутбук 3: MacBook Air</h3>
+            <p>Цена: 450 000 ₸</p>
+            <p>Процессор: Apple M1</p>
+            <p>Оперативная память: 16 ГБ</p>
+            <p>Жесткий диск: 512 ГБ SSD</p>
+            <p>Экран: 13.3 дюйма</p>
+        </div>
+        <div class="laptop fade-in">
+            <h3>Ноутбук 4: Asus ZenBook</h3>
+            <p>Цена: 375 000 ₸</p>
+            <p>Процессор: Intel Core i7</p>
+            <p>Оперативная память: 16 ГБ</p>
+            <p>Жесткий диск: 1 ТБ SSD</p>
+            <p>Экран: 14 дюймов</p>
+        </div>
+        <div class="laptop fade-in">
+            <h3>Ноутбук 5: Lenovo ThinkPad</h3>
+            <p>Цена: 300 000 ₸</p>
+            <p>Процессор: Intel Core i7</p>
+            <p>Оперативная память: 16 ГБ</p>
+            <p>Жесткий диск: 512 ГБ SSD</p>
+            <p>Экран: 15.6 дюймов</p>
+        </div>
+        <div class="laptop fade-in">
+            <h3>Ноутбук 6: Acer Predator</h3>
+            <p>Цена: 600 000 ₸</p>
+            <p>Процессор: Intel Core i9</p>
+            <p>Оперативная память: 32 ГБ</p>
+            <p>Жесткий диск: 1 ТБ SSD</p>
+            <p>Экран: 17.3 дюйма</p>
+        </div>
+        <div class="laptop fade-in">
+            <h3>Ноутбук 7: Microsoft Surface Laptop</h3>
+            <p>Цена: 425 000 ₸</p>
+            <p>Процессор: Intel Core i5</p>
+            <p>Оперативная память: 8 ГБ</p>
+            <p>Жесткий диск: 256 ГБ SSD</p>
+            <p>Экран: 13.5 дюймов</p>
+        </div>
+        <div class="laptop fade-in">
+            <h3>Ноутбук 8: Razer Blade 15</h3>
+            <p>Цена: 750 000 ₸</p>
+            <p>Процессор: Intel Core i7</p>
+            <p>Оперативная память: 16 ГБ</p>
+            <p>Жесткий диск: 512 ГБ SSD</p>
+            <p>Экран: 15.6 дюймов</p>
+        </div>
+        <div class="laptop fade-in">
+            <h3>Ноутбук 9: Samsung Galaxy Book Pro</h3>
+            <p>Цена: 350 000 ₸</p>
+            <p>Процессор: Intel Core i5</p>
+            <p>Оперативная память: 8 ГБ</p>
+            <p>Жесткий диск: 512 ГБ SSD</p>
+            <p>Экран: 13.3 дюйма</p>
+        </div>
+        <div class="laptop fade-in">
+            <h3>Ноутбук 10: MSI GE76 Raider</h3>
+            <p>Цена: 700 000 ₸</p>
+            <p>Процессор: Intel Core i9</p>
+            <p>Оперативная память: 32 ГБ</p>
+            <p>Жесткий диск: 1 ТБ SSD</p>
+            <p>Экран: 17.3 дюйма</p>
+        </div>
+        <div class="laptop fade-in">
+            <h3>Ноутбук 11: Huawei MateBook D</h3>
+            <p>Цена: 280 000 ₸</p>
+            <p>Процессор: AMD Ryzen 7</p>
+            <p>Оперативная память: 16 ГБ</p>
+            <p>Жесткий диск: 512 ГБ SSD</p>
+            <p>Экран: 15.6 дюймов</p>
+        </div>
+        <div class="laptop fade-in">
+            <h3>Ноутбук 12: Xiaomi Mi Notebook Pro</h3>
+            <p>Цена: 320 000 ₸</p>
+            <p>Процессор: Intel Core i7</p>
+            <p>Оперативная память: 16 ГБ</p>
+            <p>Жесткий диск: 1 ТБ SSD</p>
+            <p>Экран: 14 дюймов</p>
+        </div>
+    </div>
+
+    <script>
+        function showLaptops() {
+            const laptopsDiv = document.getElementById("laptops");
+            laptopsDiv.classList.toggle("show");
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание профиля</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #2575fc;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background: #1b5fd9;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Создание профиля</h1>
+        <input type="text" id="lastName" placeholder="Фамилия">
+        <input type="text" id="firstName" placeholder="Имя">
+        <input type="text" id="middleName" placeholder="Отчество">
+        <input type="text" id="nickname" placeholder="Никнейм">
+        <button onclick="createProfile()">Создать профиль</button>
+        <div id="error" class="error"></div>
+        <div id="success" class="success" style="display:none;">Профиль успешно создан! Перенаправление через 2 секунды...</div>
+    </div>
+
+    <script>
+        function createProfile() {
+            const lastName = document.getElementById('lastName').value.trim();
+            const firstName = document.getElementById('firstName').value.trim();
+            const middleName = document.getElementById('middleName').value.trim();
+            const nickname = document.getElementById('nickname').value.trim();
+
+            if (!lastName || !firstName || !middleName || !nickname) {
+                document.getElementById('error').innerText = "Все поля должны быть заполнены!";
+                return;
+            }
+
+            document.getElementById('error').innerText = "";
+            document.getElementById('success').style.display = 'block';
+
+            // Перенаправление через 2 секунды
+            setTimeout(() => {
+                window.location.href = "https://darumenchik.github.io/kasperov228/Kasperov.html"; // Замените на нужную ссылку
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

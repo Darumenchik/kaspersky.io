@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат-бот для ремонта компьютеров</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #8000ff, #ffffff); /* Градиент от фиолетового к белому */
+            color: #333;
+        }
+        .chat-container {
+            width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .chat-header {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #4e81a6;
+            margin-bottom: 15px;
+        }
+        .chat-box {
+            height: 300px;
+            overflow-y: scroll;
+            border-bottom: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .chat-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: #333;
+        }
+        .chat-message {
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 5px;
+            max-width: 80%;
+            word-wrap: break-word;
+            font-size: 14px;
+        }
+        .user-message {
+            background-color: #d4f4d1;
+            margin-left: auto;
+        }
+        .bot-message {
+            background-color: #f1f1f1;
+            margin-right: auto;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .chat-footer {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+        .quick-replies {
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+        }
+        .quick-reply {
+            background-color: #4e81a6;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+        }
+        .history-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .history-button {
+            background-color: #4e81a6;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 48%;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .typing-indicator {
+            font-size: 14px;
+            color: #bbb;
+            margin: 10px 0;
+            display: inline-block;
+        }
+        .language-button {
+            background-color: #4e81a6;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .contact-form {
+            display: none;
+            flex-direction: column;
+            margin-top: 10px;
+        }
+        .contact-form input {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .rating-buttons {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .rating-button {
+            background-color: #4e81a6;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 48%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">Чат-бот поддержки</div>
+    <div class="chat-box" id="chatBox"></div>
+    <input type="text" class="chat-input" id="userInput" placeholder="Введите свой вопрос..." onkeydown="if(event.key === 'Enter'){sendMessage()}">
+    <div class="chat-footer">
+        Если вам нужно больше помощи, напишите номер или Telegram: @darumeni
+    </div>
+
+    <div class="language-button" onclick="changeLanguage()">Сменить язык</div>
+
+    <div class="history-buttons">
+        <button class="history-button" onclick="showHistory()">Показать последние запросы</button>
+        <button class="history-button" onclick="clearChat()">Новый чат</button>
+    </div>
+
+    <div id="quickReplies" class="quick-replies"></div>
+    <div id="contactForm" class="contact-form">
+        <input type="text" id="phoneNumber" placeholder="Ваш номер телефона" />
+        <input type="text" id="telegram" placeholder="Ваш Telegram" />
+        <button onclick="submitContactForm()">Отправить запрос</button>
+    </div>
+
+    <div id="rating" class="rating-buttons">
+        <button class="rating-button" onclick="rateBot(1)">1</button>
+        <button class="rating-button" onclick="rateBot(5)">5</button>
+    </div>
+</div>
+
+<script>
+    const responses = {
+        "как установить антивирус": "Для установки антивируса выполните следующие шаги:\n1. Скачайте установочный файл с официального сайта.\n2. Запустите файл и следуйте инструкциям.\n3. Введите ключ активации при необходимости.",
+        "как установить google chrome": "Перейдите на сайт https://www.google.com/chrome/, скачайте файл и следуйте инструкциям по установке.",
+        "как почистить ноутбук": "Откройте «Панель управления», удалите ненужные программы, а затем используйте утилиту «Очистка диска».",
+        "почему компьютер медленно работает": "Попробуйте очистить систему от ненужных файлов, отключить автозагрузку лишних программ и проверить наличие вирусов.",
+        "компьютер не включается": "Проверьте подключение питания, кабели и индикаторы на устройстве. Если проблемы продолжаются, обратитесь в сервис.",
+        "как восстановить потерянные данные": "Используйте программы для восстановления данных, такие как Recuva или Disk Drill, если они не помогли, обратитесь к специалисту.",
+        "компьютер зависает": "Попробуйте перезагрузить компьютер и проверить наличие обновлений системы или драйверов.",
+        "ошибка с драйверами": "Проверьте на сайте производителя устройства последние версии драйверов и обновите их.",
+        "как обновить windows": "Откройте «Параметры» > «Обновление и безопасность» и нажмите «Проверить обновления».",
+        "как настроить wi-fi": "Перейдите в настройки сети, выберите вашу сеть Wi-Fi и введите пароль.",
+        "почему не работает звук на компьютере": "Проверьте подключение колонок, настройки звука в операционной системе и драйверы для аудиоустройств.",
+        "как сделать резервную копию": "Откройте «Панель управления» > «Резервное копирование и восстановление» и создайте резервную копию ваших данных.",
+        "помощь специалиста": "Если вам нужна помощь специалиста, напишите номер телефона или контакт в Telegram, и мы с вами свяжемся. Например, «87778201120» или «@darumeni»."
+    };
+
+    const responses_en = {
+        "how to install antivirus": "To install antivirus follow these steps:\n1. Download the installation file from the official website.\n2. Run the file and follow the instructions.\n3. Enter the activation key if necessary.",
+        "how to install google chrome": "Go to the website https://www.google.com/chrome/, download the file, and follow the installation instructions.",
+        "how to clean laptop": "Go to 'Control Panel', remove unnecessary programs, and use the 'Disk Cleanup' utility.",
+        "why is the computer slow": "Try cleaning the system from unnecessary files, disabling unnecessary startup programs, and checking for viruses.",
+        "computer won't turn on": "Check the power connection, cables, and indicators on the device. If the problem persists, contact the service center.",
+        "how to recover lost data": "Use data recovery programs like Recuva or Disk Drill. If they didn't help, contact a specialist.",
+        "computer freezes": "Try restarting the computer and checking for system or driver updates.",
+        "driver error": "Check for the latest driver versions on the device manufacturer's website and update them.",
+        "how to update windows": "Go to 'Settings' > 'Update & Security' and click 'Check for Updates'.",
+        "how to set up wi-fi": "Go to network settings, select your Wi-Fi network, and enter the password.",
+        "why is sound not working on the computer": "Check the speaker connection, sound settings in the operating system, and audio drivers.",
+        "how to make a backup": "Go to 'Control Panel' > 'Backup and Restore' and create a backup of your data.",
+        "specialist help": "If you need help from a specialist, please leave your phone number or Telegram contact, and we will get in touch with you. For example, '87778201120' or '@darumeni'."
+    };
+
+    let currentLanguage = 'ru'; // Start with Russian
+
+    // Загружаем историю чатов из localStorage
+    const history = JSON.parse(localStorage.getItem('chatHistory')) || [];
+
+    // Функция для отправки сообщения
+    function sendMessage() {
+        const userMessage = document.getElementById("userInput").value;
+        if (userMessage.trim() === "") return;
+
+        // Добавляем сообщение пользователя в историю
+        history.push({ sender: 'user', message: userMessage });
+        localStorage.setItem('chatHistory', JSON.stringify(history));
+
+        displayMessage(userMessage, "user");
+
+        // Показать индикатор того, что бот "думает"
+        displayMessage("Бот думает...", "bot", true);
+
+        // Задержка для имитации "размышлений" бота
+        setTimeout(function() {
+            const botResponse = getBotResponse(userMessage);
+            // Удалить индикатор "думает" и показать реальный ответ
+            removeTypingIndicator();
+            displayMessage(botResponse, "bot");
+
+            // Показать кнопки с предложениями
+            displayQuickReplies();
+        }, 5000); // Ответ через 5 секунд
+
+        document.getElementById("userInput").value = "";
+    }
+
+    // Функция для отображения сообщений
+    function displayMessage(message, sender, isTyping = false) {
+        const chatBox = document.getElementById("chatBox");
+        const messageDiv = document.createElement("div");
+        messageDiv.classList.add("chat-message", sender === "user" ? "user-message" : "bot-message");
+        if (isTyping) {
+            messageDiv.classList.add("typing-indicator");
+        }
+        messageDiv.innerHTML = message.replace(/(вирус|ошибка|компьютер|драйвер)/g, '<span class="highlight">$1</span>'); // Подсветка ключевых слов
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Удаление индикатора "думает"
+    function removeTypingIndicator() {
+        const typingIndicators = document.querySelectorAll('.typing-indicator');
+        typingIndicators.forEach(indicator => {
+            indicator.remove();
+        });
+    }
+
+    // Получение ответа бота
+    function getBotResponse(userMessage) {
+        const messageLower = userMessage.toLowerCase();
+        let responsesToUse = currentLanguage === 'ru' ? responses : responses_en;
+
+        for (let key in responsesToUse) {
+            if (messageLower.includes(key)) {
+                return responsesToUse[key];
+            }
+        }
+        return currentLanguage === 'ru' ? "Извините, я не понял ваш запрос. Пожалуйста, уточните ваш вопрос." : "Sorry, I didn't understand your request. Please clarify.";
+    }
+
+    // Показать последние запросы
+    function showHistory() {
+        const chatBox = document.getElementById("chatBox");
+        chatBox.innerHTML = "";
+        history.forEach(item => {
+            displayMessage(item.message, item.sender);
+        });
+    }
+
+    // Очистить чат и историю
+    function clearChat() {
+        history.length = 0;
+        localStorage.setItem('chatHistory', JSON.stringify(history));
+        document.getElementById("chatBox").innerHTML = "";
+    }
+
+    // Показать кнопки с предложениями
+    function displayQuickReplies() {
+        const quickRepliesDiv = document.getElementById("quickReplies");
+        const replies = [
+            currentLanguage === 'ru' ? "Как установить антивирус" : "How to install antivirus",
+            currentLanguage === 'ru' ? "Как почистить ноутбук" : "How to clean laptop",
+            currentLanguage === 'ru' ? "Почему компьютер медленно работает" : "Why is the computer slow"
+        ];
+        quickRepliesDiv.innerHTML = "";
+        replies.forEach(reply => {
+            const replyButton = document.createElement("div");
+            replyButton.classList.add("quick-reply");
+            replyButton.textContent = reply;
+            replyButton.onclick = function() {
+                document.getElementById("userInput").value = reply;
+                sendMessage();
+            };
+            quickRepliesDiv.appendChild(replyButton);
+        });
+    }
+
+    // Сменить язык
+    function changeLanguage() {
+        currentLanguage = currentLanguage === 'ru' ? 'en' : 'ru';
+        showHistory();
+    }
+
+    // Записать контактные данные
+    function submitContactForm() {
+        const phoneNumber = document.getElementById("phoneNumber").value;
+        const telegram = document.getElementById("telegram").value;
+        if (!phoneNumber && !telegram) {
+            alert("Пожалуйста, введите номер телефона или Telegram.");
+            return;
+        }
+        alert(`Ваш запрос отправлен! Мы свяжемся с вами на ${phoneNumber || telegram}.`);
+        document.getElementById("contactForm").style.display = "none";
+    }
+
+    // Оценка работы бота
+    function rateBot(rating) {
+        alert(`Спасибо за оценку! Вы оценили работу бота на ${rating} звезд.`);
+    }
+
+</script>
+</body>
+</html>
